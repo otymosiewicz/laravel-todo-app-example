@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Task extends Model
 {
@@ -23,6 +24,10 @@ class Task extends Model
 
     protected $fillable = [
         'user_id', 'title', 'description', 'priority', 'status', 'deadline',
+    ];
+
+    protected $guarded = [
+        'hash'
     ];
 
     public function user(): BelongsTo
@@ -51,10 +56,16 @@ class Task extends Model
         };
 
         static::created($dispatchReminder);
+        static::creating(function (Task $task) {
+            do {
+                $hash = substr(hash('sha256', Str::uuid()->toString()), 0, 24);
+            } while (Task::query()->where('hash', $hash)->exists());
+
+            $task->hash = $hash;
+        });
 
         static::updated(function (Task $task) use ($dispatchReminder): void {
             if ($task->isDirty('deadline') || $task->isDirty('status')) {
-                dd($task->getDirty());
                 $dispatchReminder($task);
             }
         });

@@ -18,6 +18,12 @@ new class extends Component {
         $this->isVisible = false;
         $this->dispatch('show-modal', $this->taskId)->to('task.update');
     }
+
+    public function copyLink(Task $task): void
+    {
+        $url = route('shared_task', ['hash' => $task->hash]);
+        $this->dispatch('copy-to-clipboard', $url);
+    }
 }; ?>
 
 
@@ -52,8 +58,29 @@ new class extends Component {
                     <x-icon class="size-3.5 shrink-0" name="trash" />
                     Delete
                 </button>
+                <button
+                    type="button"
+                    wire:click="copyLink('{{$taskId}}')"
+                    class="focus:outline-hidden flex w-full items-center gap-x-3 rounded-lg px-3 py-1.5 text-[13px] text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
+                >
+                    <x-icon class="size-3.5 shrink-0" name="share-fat" />
+                    Share private link
+                </button>
             </div>
         </div>
     @endif
 </div>
+
+@script
+<script>
+    if (!window.copyToClipboardRegistered) {
+        window.copyToClipboardRegistered = true;
+
+        Livewire.on('copy-to-clipboard', (url) => {
+            navigator.clipboard.writeText(url);
+            alert('The link has been copied to your clipboard.');
+        });
+    }
+</script>
+@endscript
 
