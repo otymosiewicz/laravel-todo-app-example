@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enum\Priority;
+use App\Enum\Status;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +30,10 @@ class Task extends Model
 
     protected function casts(): array
     {
-        return ['deadline' => 'datetime'];
+        return [
+            'deadline' => 'datetime',
+            'status' => Status::class,
+            'priority' => Priority::class,
+        ];
     }
 }

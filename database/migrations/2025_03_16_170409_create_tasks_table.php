@@ -1,5 +1,7 @@
 <?php
 
+use App\Enum\Priority;
+use App\Enum\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +17,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('title', 255);
             $table->text('description')->nullable();
-            $table->enum('priority', ['low', 'medium', 'high'])->default('low');
-            $table->enum('status', ['to-do', 'in-progress', 'done'])->default('to-do');
+            $table->enum('priority', [Priority::LOW->value, Priority::MID->value, Priority::HIGH->value])->default(Priority::LOW->value);
+            $table->enum('status', [Status::TODO->value, Status::IN_PROGRESS->value, Status::DONE->value])->default(Status::TODO->value);
             $table->dateTime('deadline')->nullable();
             $table->timestamps();
 

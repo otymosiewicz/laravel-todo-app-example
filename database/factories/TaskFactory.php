@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enum\Priority;
+use App\Enum\Status;
 use App\Models\Task;
 use App\Models\User;
 use DateTime;
@@ -20,14 +22,14 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $status = fake()->randomElement(['to-do', 'in-progress', 'done']);
+        $status = fake()->randomElement([Status::TODO->value, Status::IN_PROGRESS->value, Status::DONE->value]);
         $deadline = $status === 'done' ? fake()->dateTimeBetween(startDate: '-1 month') : fake()->dateTimeBetween(startDate: 'now', endDate: '+1 month');
 
         return [
             'title' => fake()->sentence(),
             'description' => fake()->paragraph(),
             'status' => $status,
-            'priority' => fake()->randomElement(['low', 'medium', 'high']),
+            'priority' => fake()->randomElement([Priority::LOW->value, Priority::MID->value, Priority::HIGH->value]),
             'deadline' => $deadline,
         ];
     }
@@ -35,7 +37,7 @@ class TaskFactory extends Factory
     public function withDoneStatus(): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'done',
+            'status' => Status::DONE->value,
             'deadline' => $this->getPastDateTime(),
         ]);
     }
@@ -53,7 +55,7 @@ class TaskFactory extends Factory
     public function withInProgressStatus(?DateTimeInterface $deadline = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'in-progress',
+            'status' => Status::IN_PROGRESS->value,
             'deadline' => $deadline ?? $this->getFutureDateTime(),
         ]);
     }
@@ -61,7 +63,7 @@ class TaskFactory extends Factory
     public function withTodoStatus(?DateTimeInterface $deadline = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'to-do',
+            'status' => Status::TODO->value,
             'deadline' => $deadline ?? $this->getFutureDateTime(),
         ]);
     }
