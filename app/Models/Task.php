@@ -19,8 +19,9 @@ class Task extends Model
 {
     /** @use HasFactory<TaskFactory> */
     use HasFactory;
-    use LogsActivity;
+
     use HasUuids;
+    use LogsActivity;
 
     protected $keyType = 'string';
 
@@ -29,7 +30,7 @@ class Task extends Model
     ];
 
     protected $guarded = [
-        'hash'
+        'hash',
     ];
 
     public function user(): BelongsTo
@@ -52,7 +53,7 @@ class Task extends Model
 
         $dispatchReminder = function (Task $task) {
             if ($task->deadline instanceof DateTimeInterface && in_array($task->status,
-                    [Status::TODO, Status::IN_PROGRESS])) {
+                [Status::TODO, Status::IN_PROGRESS])) {
                 SendReminderEmailJob::dispatch($task);
             }
         };
