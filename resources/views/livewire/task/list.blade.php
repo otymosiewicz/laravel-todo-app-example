@@ -85,5 +85,7 @@ new class extends Component {
     <livewire:task.create />
     <livewire:task.update />
 
+    <livewire:task.partials.change_history />
+
     {{ $this->tasks->links() }}
 </div>

@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Task extends Model
 {
     /** @use HasFactory<TaskFactory> */
     use HasFactory;
-
+    use LogsActivity;
     use HasUuids;
 
     protected $keyType = 'string';
@@ -69,5 +71,13 @@ class Task extends Model
                 $dispatchReminder($task);
             }
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logExcept(['user_id'])
+            ->logOnlyDirty();
     }
 }

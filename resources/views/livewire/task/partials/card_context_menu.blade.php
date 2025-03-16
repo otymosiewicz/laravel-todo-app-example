@@ -23,6 +23,13 @@ new class extends Component {
     {
         $url = route('shared_task', ['hash' => $task->hash]);
         $this->dispatch('copy-to-clipboard', $url);
+        $this->isVisible = false;
+    }
+
+    public function openChangeHistoryModal(Task $task): void
+    {
+        $this->dispatch('show-modal', $this->taskId)->to('task.partials.change_history');
+        $this->isVisible = false;
     }
 }; ?>
 
@@ -65,6 +72,14 @@ new class extends Component {
                 >
                     <x-icon class="size-3.5 shrink-0" name="share-fat" />
                     Share private link
+                </button>
+                <button
+                    wire:click="openChangeHistoryModal('{{ $taskId }}')"
+                    type="button"
+                    class="focus:outline-hidden flex w-full items-center gap-x-3 rounded-lg px-3 py-1.5 text-[13px] text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
+                >
+                    <x-icon class="size-3.5 shrink-0" name="files" />
+                    Change history
                 </button>
             </div>
         </div>
