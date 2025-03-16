@@ -16,7 +16,7 @@
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.1",
-        "laravel/pint": "^1.13",
+        "laravel/pint": "^1.21",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
@@ -53,6 +53,18 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+        ],
+        "db-migrate": [
+            "vendor/bin/sail artisan migrate"
+        ],
+        "db-setup": [
+            "vendor/bin/sail artisan migrate:fresh --seed"
+        ],
+        "pint-dry": [
+            "vendor/bin/sail exec laravel.test vendor/bin/pint --test -v"
+        ],
+        "pint-fix": [
+            "vendor/bin/sail exec laravel.test vendor/bin/pint"
         ]
     },
     "extra": {
