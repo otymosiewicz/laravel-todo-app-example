@@ -78,7 +78,7 @@ new class extends Component {
         @endif
 
         @foreach ($this->tasks as $task)
-            <livewire:task.partials.task_card :$task :key="$task->id" />
+            <livewire:task.partials.card :$task :key="$task->id" />
         @endforeach
     </div>
 
